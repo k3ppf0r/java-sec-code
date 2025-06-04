@@ -5,18 +5,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.AesCipherService;
 import org.joychou.config.Constants;
 import org.joychou.util.CookieUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+
 import static org.springframework.web.util.WebUtils.getCookie;
 
 @Slf4j
 @RestController
 public class Shiro {
-
+    private static final Logger logger = LoggerFactory.getLogger(SSRF.class);
     byte[] KEYS = java.util.Base64.getDecoder().decode("kPH+bIxk5D2deZiIxcaaaA==");
     private final static String DELETE_ME = "deleteMe";
     AesCipherService acs = new AesCipherService();
@@ -39,7 +42,7 @@ public class Shiro {
             in.close();
         } catch (Exception e){
             if (CookieUtils.addCookie(res, "rememberMe", DELETE_ME)){
-                log.error(e.getMessage());
+                logger.error(e.getMessage());
                 return "RememberMe cookie decrypt error. Set deleteMe cookie success.";
             }
         }
